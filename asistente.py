@@ -53,3 +53,19 @@ def hablar(mensaje):
 def pedir_dia():
     #crear variable con datos de hoy
     dia = datetime.date.today()
+    print(dia)
+    #crear una variable para el dia de semana
+    dia_semana = dia.weekday()
+    print(dia_semana)
+
+    #diccionario con nombres de los dias
+    calendario = {0 : 'Lunes',
+                  1 : 'Martes',
+                  2 : 'Miercoles',
+                  3 : 'Jueves',
+                  4 : 'Viernes',
+                  5 : 'Sabado',
+                  6 : 'Domingo'}
+    #decir el dia de la semana
+    hablar(f'Hoy es {calendario[dia_semana]}')
+
