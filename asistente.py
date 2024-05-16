@@ -1,10 +1,12 @@
 import datetime
+import webbrowser
 from datetime import date
 
 import pyttsx3
 import sounddevice as sd
 import numpy as np
 import speech_recognition as sr
+import wikipedia
 
 
 def transformar_audio_en_texto():
@@ -69,3 +71,61 @@ def pedir_dia():
     #decir el dia de la semana
     hablar(f'Hoy es {calendario[dia_semana]}')
 
+#informar que hora es
+def pedir_hora():
+    #crear una variable con datos de la hora
+    hora = datetime.datetime.now()
+    hora = f'En este momento son las {hora.hour} horas con {hora.minute} minutos'
+    print(hora)
+    #decir la hora
+    hablar(hora)
+
+# funcion saludo inicial
+def saludo_inicial():
+    #crear variable con datos de hora
+    hora = datetime.datetime.now()
+    if hora.hour < 6 or hora.hour > 20:
+        momento = 'Buenas noches'
+    elif hora.hour >= 6 and hora.hour < 13:
+        momento = 'Buenos dias'
+    else:
+        momento = 'Buenas tardes'
+
+    # decir el saludo
+    hablar(f'Hola. {momento}, soy TUX, el asistente, dime en que te puedo ayudar')
+
+# funcion central del asistente
+def pedir_cosas():
+    #activar el saludo inicial
+    saludo_inicial()
+    #variable de corte
+    comenzar = True
+    #loop central
+    while comenzar:
+        #activar el micro y guardar el pedido en un string
+        pedido = transformar_audio_en_texto().lower()
+        if 'abrir youtube' in pedido:
+            hablar('Con gusto, estoy abriendo youtube')
+            webbrowser.open('https://www.youtube.com/')
+            continue
+        elif 'abrir el navegador' in pedido:
+            hablar('Abriendo navegador')
+            webbrowser.open('https://www.google.com/')
+            continue
+        elif 'dime el dia' in pedido:
+            pedir_dia()
+            continue
+        elif 'dime la hora' in pedido:
+            pedir_hora()
+            continue
+        elif 'busca en wikipedia' in pedido:
+            hablar('Buscando en wikipedia')
+            pedido = pedido.replace('busca en wikipedia', '')
+            wikipedia.set_lang('es')
+            resultado = wikipedia.summary(pedido, sentences=1)
+            hablar('Wikipedia dice lo siguiente:')
+            hablar(resultado)
+            continue
+
+
+pedir_cosas()
