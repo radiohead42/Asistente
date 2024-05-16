@@ -1,3 +1,7 @@
+import datetime
+from datetime import date
+
+import pyttsx3
 import sounddevice as sd
 import numpy as np
 import speech_recognition as sr
@@ -38,5 +42,14 @@ def transformar_audio_en_texto():
         print('Algo ha salido mal:', str(e))
         return 'Sigo esperando'
 
+# Funcion para que el asistente pueda ser escuchado
+def hablar(mensaje):
+    #encender el motor de pyttsx3
+    engine = pyttsx3.init()
+    engine.setProperty('voice', 'spanish-latin-am')
+    engine.say(mensaje)
+    engine.runAndWait()
 
-transformar_audio_en_texto()
+def pedir_dia():
+    #crear variable con datos de hoy
+    dia = datetime.date.today()
