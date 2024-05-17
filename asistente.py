@@ -1,12 +1,14 @@
 import datetime
 import webbrowser
 from datetime import date
-
+import pyjokes
 import pyttsx3
+import pywhatkit
 import sounddevice as sd
 import numpy as np
 import speech_recognition as sr
 import wikipedia
+import yfinance as yf
 
 
 def transformar_audio_en_texto():
@@ -126,6 +128,35 @@ def pedir_cosas():
             hablar('Wikipedia dice lo siguiente:')
             hablar(resultado)
             continue
-
+        elif 'busca en internet' in pedido:
+            hablar('Buscando en internet')
+            pedido = pedido.replace('busca en internet', '')
+            pywhatkit.search(pedido)
+            hablar("Esto es lo que encontre")
+            continue
+        elif 'reproducir a' in pedido:
+            hablar('Reproduciendo')
+            pywhatkit.playonyt(pedido)
+            continue
+        elif 'broma' in pedido:
+            hablar(pyjokes.get_joke('es'))
+            continue
+        elif 'precio de las acciones' in pedido:
+            accion = pedido.split('de')[-1].strip()
+            cartera = {'apple': 'AAPL',
+                   'amazon': 'AMZN',
+                   'google': 'GOOGL'}
+            try:
+                accion_buscada = cartera[accion]
+                accion_buscada = yf.Ticker(accion_buscada)
+                precio_actual = accion_buscada.info['regularMarketPrice']
+                hablar(f'La encontre, el precio de {accion} es {precio_actual} dólares')
+                continue
+            except KeyError:
+                hablar(f'No tengo información sobre {accion}')
+                continue
+        elif 'terminar' in pedido:
+            hablar('Terminando')
+            break
 
 pedir_cosas()
